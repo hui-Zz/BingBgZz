@@ -11,13 +11,14 @@ SetBatchLines,-1		;~;脚本全速执行(默认10ms)
 SetWorkingDir,%A_ScriptDir%	;~;脚本当前工作目录
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【初始化全局变量】
-global bing:="http://cn.bing.com"
-global DPI:="1920x1080"		;~;支持1024x768|1366x768|1920x1080|1920x1200|等
+global DPI:="1920x1080"			;~;支持1024x768|1366x768|1920x1080|1920x1200|等
 global bgDay=0					;~;获取必应今天壁纸,1为昨天,累加下载历史壁纸
 global bgNum=1					;~;获取bgDay至前几天壁纸数量,最大为8
 global bgFlag=2				;~;壁纸文件名称形式,0为日期YYYYMMDD,1为英文名称_分辨率,2为英文名称_日期
 global bgDir:="D:\Users\Pictures\bing"	;~;壁纸图片下载保存路径
-global bgImg:=bing "/HPImageArchive.aspx?idx=" bgDay "&n=" bgNum	;~;必应壁纸XML地址
+;~;必应壁纸XML地址
+global bing:="http://cn.bing.com"
+global bgImg:=bing "/HPImageArchive.aspx?idx=" bgDay "&n=" bgNum
 global bgXML					;~;XML配置内容
 global bgImgUrl					;~;壁纸下载地址
 global bgPath					;~;壁纸保存路径
