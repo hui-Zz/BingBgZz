@@ -8,6 +8,7 @@
 ╚═════════════════════════════════
 */
 #NoEnv					;~;不检查空变量为环境变量
+FileEncoding,UTF-8		;~;下载的XML以中文编码加载
 SetBatchLines,-1		;~;脚本全速执行(默认10ms)
 SetWorkingDir,%A_ScriptDir%	;~;脚本当前工作目录
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -33,8 +34,10 @@ XML_Download()
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~ F1::
 	FileRead, bgXML, %A_ScriptDir%\bingImg.xml
-	RegExMatch(bgXML, "<enddate>(.*?)</enddate>", bgDate)
+	RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR)
+	ToolTip,%bgCR1%,A_ScreenWidth,A_ScreenHeight
 	RegExMatch(bgXML, "<url>(.*?)</url>", bgUrl)
+	RegExMatch(bgXML, "<enddate>(.*?)</enddate>", bgDate)
 	BG_GetImgUrlPath(bgUrl1,bgDate1)
 	BG_Download()
 	BG_DownFail()
