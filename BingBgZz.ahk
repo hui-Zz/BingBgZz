@@ -1,9 +1,10 @@
 ﻿/*
 ╔═════════════════════════════════
-║【BingBgZz】每日桌面Bing壁纸
+║【BingBgZz】每日桌面Bing壁纸 v1.2
 ║ 联系：hui0.0713@gmail.com
 ║ 讨论QQ群：3222783、271105729、493194474
-║ by Zz @2016.12.21
+║ by Zz @2016.12.23
+║ 最新版本：github.com/hui-Zz/BingBgZz
 ╚═════════════════════════════════
 */
 #NoEnv					;~;不检查空变量为环境变量
@@ -11,9 +12,10 @@ SetBatchLines,-1		;~;脚本全速执行(默认10ms)
 SetWorkingDir,%A_ScriptDir%	;~;脚本当前工作目录
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【初始化全局变量】
-global DPI:="1920x1080"	;~;支持1024x768|1366x768|1920x1080|1920x1200|等
-global bgDay=0				;~;获取必应今天壁纸,1为昨天,累加下载历史壁纸
-global bgNum=1				;~;获取bgDay至前几天壁纸数量,最大为8
+global DPI:=BG_GetDPI()	;~;默认自动获取;支持1024x768|1366x768|1920x1080|1920x1200|等
+global bgDay=0				;~;下载必应今天壁纸,1为昨天,累加下载历史壁纸
+global bgNum=1				;~;下载bgDay至前1天壁纸数量,最大为前8天
+global bgMax=8				;~;下载后最多只保留前8天的壁纸,设置0为不限制数量(注:bgFlag不能为1)
 global bgFlag=2			;~;壁纸文件名称形式,0为日期YYYYMMDD,1为英文名称_分辨率,2为英文名称_日期
 global bgDir:="D:\Users\Pictures\bing"	;~;壁纸图片下载保存路径
 ;~;必应壁纸XML地址
@@ -22,6 +24,8 @@ global bgImg:=bing "/HPImageArchive.aspx?idx=" bgDay "&n=" bgNum
 global bgXML				;~;XML配置内容
 global bgImgUrl				;~;壁纸下载地址
 global bgPath				;~;壁纸保存路径
+IfNotExist, %bgDir%
+	FileCreateDir, %bgDir%
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 XML_Download()
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -32,6 +36,7 @@ XML_Download()
 	BG_GetImgUrlPath(bgUrl1,bgDate1)
 	BG_Download()
 	BG_Wallpapers()
+	BG_DeleteBefore()
 return
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【批量下载历史壁纸,搭配bgDay和bgNum使用】
@@ -76,5 +81,47 @@ BG_Download(){
 ;~;【必应壁纸设置为桌面壁纸】
 BG_Wallpapers(){
 	DllCall("SystemParametersInfo", UInt, 0x14, UInt,0, Str,"" bgPath "", UInt, 2)
+}
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;~;【获取屏幕的分辨率】
+BG_GetDPI(){
+	SysGet, Mon, Monitor
+	ratio := MonRight/MonBottom
+	if (ratio = 16/9)
+		return "1920x1080"
+	else if (ratio = 16/10)
+		return "1920x1200"
+	else if (ratio = 4/3)
+	{
+		if (MonRight = 1024)
+			return "1024x768"
+		else if  (MonRight = 1366)
+			return "1366x768"
+		else
+			return "1920x1200"
+	}else
+		return "1920x1200"
+}
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;~;【壁纸数量超过设定删除最早一张】
+BG_DeleteBefore(){
+	if(bgFlag!=1 && bgMax>0){
+		FileCopy, %bgDir%, %bgDir%
+		if(bgMax<ErrorLevel){
+			tMax := 1
+			tPath := bgPath
+			Loop,%bgDir%\*.jpg
+			{
+				t1 := A_Now
+				t2 := A_LoopFileTimeCreated
+				t1 -= %t2%, Days
+				if(t1>tMax){
+					tMax := t1
+					tPath := A_LoopFileLongPath
+				}
+			}
+			FileDelete, %tPath%
+		}
+	}
 }
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
