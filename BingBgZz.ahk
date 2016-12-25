@@ -1,6 +1,6 @@
 ﻿/*
 ╔═════════════════════════════════
-║【BingBgZz】每日桌面Bing壁纸 v1.3
+║【BingBgZz】每日桌面Bing壁纸 v1.4
 ║ 联系：hui0.0713@gmail.com
 ║ 讨论QQ群：3222783、271105729、493194474
 ║ by Zz @2016.12.23
@@ -32,18 +32,31 @@ IfNotExist, %bgDir%
 	FileCreateDir, %bgDir%
 XML_Download()
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-;~;【读取XML,下载图片,设置桌面背景】
+;~;【读取XML,下载图片,设置桌面背景,如已下载则随机更换壁纸】
 ;~ F1::
 	FileRead, bgXML, %A_ScriptDir%\bingImg.xml
-	RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR)
-	ToolTip,%bgCR1%,A_ScreenWidth,A_ScreenHeight
 	RegExMatch(bgXML, "<url>(.*?)</url>", bgUrl)
 	RegExMatch(bgXML, "<enddate>(.*?)</enddate>", bgDate)
 	BG_GetImgUrlPath(bgUrl1,bgDate1)
-	BG_Download()
-	BG_DownFail()
-	BG_Wallpapers()
-	BG_DeleteBefore()
+	IfNotExist,%bgPath%
+	{
+		RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR)
+		ToolTip,%bgCR1%,A_ScreenWidth,A_ScreenHeight
+		BG_Download()
+		BG_DownFail()
+		BG_Wallpapers()
+		BG_DeleteBefore()
+	}else{
+		FileCopy, %bgDir%, %bgDir%
+		Random, roll, 1, %ErrorLevel%
+		Loop,%bgDir%\*.jpg
+		{
+			if(A_Index=roll){
+				bgPath:=A_LoopFileLongPath
+				BG_Wallpapers()
+			}
+		}
+	}
 return
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【批量下载历史壁纸,搭配bgDay和bgNum使用】
