@@ -1,4 +1,4 @@
-# BingBgZz 每日桌面Bing壁纸 v1.3
+# BingBgZz 每日桌面Bing壁纸 v1.4
 
 **每日开机运行后会下载当日bing壁纸并设置为桌面壁纸，用完即关**
 
