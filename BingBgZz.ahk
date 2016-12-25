@@ -14,7 +14,7 @@ SetWorkingDir,%A_ScriptDir%	;~;脚本当前工作目录
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【用户自定义变量】
 global bgDay=0			;~;下载必应今天壁纸,1为昨天,以此类推可下载历史壁纸
-global bgNum=8			;~;下载bgDay至前1天壁纸数量,最大为前8天
+global bgNum=1			;~;下载bgDay至前1天壁纸数量,最大为前8天
 global bgMax=8			;~;下载后最多只保留前8天的壁纸,设置0为不限制数量(注:bgFlag不能为1)
 global bgFlag=2			;~;壁纸文件名称形式,0为日期YYYYMMDD,1为英文名称_分辨率,2为英文名称_日期
 global bgDir:="D:\Users\Pictures\bing" ;~;壁纸图片保存路径,如bgMax不是0必须是单独文件夹,防止丢失其他图片
