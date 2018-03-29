@@ -147,6 +147,8 @@ BG_GetImgUrlPath(bgUrl1,bgDate1){
 		bgName:=RegExReplace(bgName, "i)[^_]+\.jpg$", DPI ".jpg")
 	}else if(bgFlag=2){
 		bgName:=RegExReplace(bgName, "i)[^_]+\.jpg$", bgDate1 ".jpg")
+	}else if(bgFlag=3){
+		bgName:=RegExReplace(bgName, "i)[^_]+\.jpg$", DPI "_" bgDate1 ".jpg")
 	}else{
 		bgName:=bgDate1 . ".jpg"
 	}
@@ -197,13 +199,13 @@ BG_DeleteBefore(){
 			{
 				t1 := A_Now
 				t2 := A_LoopFileTimeCreated
-				t1 -= %t2%, Days
+				t1 -= %t2%
 				if(t1>tMax){
 					tMax := t1
 					tPath := A_LoopFileLongPath
 				}
 			}
-			if(RegExMatch(tPath, "i)[0-9]{8}\.jpg$")){
+			if(RegExMatch(tPath, "i).*?_.*?\.jpg$")){
 				FileDelete, %tPath%
 			}
 		}
@@ -232,17 +234,18 @@ FileAppend,
 ;╚═════════════════════════════════
 ;~;【用户自定义变量】
 [var_config]
-;~;是否随系统自动启动,0不自动启动,1随系统自动启动
+;~;是否随系统自动启动,0不自动启动,1随系统自动启动（修改后保存，再运行BingBgZz就生效了）
 autoRun=0
-;~;下载必应今天壁纸,1为昨天,以此类推可下载历史壁纸
+;~;0为下载必应今天壁纸,1为昨天,以此类推可下载历史壁纸
 bgDay=0
-;~;批量下载(默认1),下载bgDay至前1天壁纸数量,最大为前8天
+;~;批量下载(默认1张),下载bgDay至前1天壁纸数量,最大为前8天
 bgNum=1
-;~;下载后最多只保留前30天的壁纸,设置0为不限制数量(注:bgFlag不能为1)
-bgMax=30
-;~;壁纸文件名称形式,0为日期YYYYMMDD,1为英文名称_分辨率,2为英文名称_日期
+;~;壁纸文件名称形式,0为日期YYYYMMDD,1为英文名称_分辨率,2为英文名称_日期,3为英文名称_分辨率_日期
 bgFlag=2
-;~;壁纸图片保存路径,默认在bing目录下,可设置路径如C:\Users\Pictures\bing（如果bgMax不是0必须是单独文件夹,防止丢失其他图片）
+;~;下载后最多只保留前30天的壁纸,设置0为不限制数量不删除旧图片
+bgMax=30
+;~;壁纸图片保存路径,默认在bing目录下,可设置路径如C:\Users\Pictures\bing
+;~;（注意！如果bgMax不是0，必须保证bgDir目录中没有除壁纸外的jpg图片,防止丢失其他图片）
 bgDir=bing
 ;~;默认0为自动根据分辨率获取,可固定为1024x768|1366x768|1920x1080|1920x1200
 DPI=0
@@ -251,6 +254,6 @@ bing=http://cn.bing.com
 ;~;当前必应壁纸说明显示方式,0为鼠标浮动文字,1为浮动文字并拷贝到剪贴板,2为弹出消息通知,3为弹出消息通知并拷贝到剪贴板
 style=0
 ;~;当前必应壁纸说明显示停留时间(毫秒),0为弹窗显示手动关闭
-time=2000
+time=3000
 ),%iniFile%
 return
