@@ -85,27 +85,9 @@ if(!batchFlag){
 		BG_Download()
 		BG_DownFail()
 		BG_Wallpapers()
-		if(time=0){
-			MsgBox, 0, 可按Ctrl+C来复制内容, %bgCR1%
-		}else{
-			if(style=2 || style=3)
-				TrayTip,,%bgCR1%,3,1
-			if(style=0 || style=1)
-				ToolTip,%bgCR1%
-			if(style=1 || style=3)
-				Clipboard:=bgCR1
-			Sleep,%time%
-		}
+		BG_Content(bgCR1)
 	}else{
-		FileCopy, %bgDir%, %bgDir%
-		Random, roll, 1, %ErrorLevel%
-		Loop,%bgDir%\*.jpg
-		{
-			if(A_Index=roll){
-				bgPath:=A_LoopFileLongPath
-				BG_Wallpapers()
-			}
-		}
+		BG_Random()
 	}
 }else{
 	;~;【批量下载历史壁纸,搭配bgDay和bgNum使用】
@@ -115,26 +97,23 @@ if(!batchFlag){
 	{
 		RegExMatch(bgXML, "<url>(.*?)</url>", bgUrl, pos)
 		BG_GetImgUrlPath(bgUrl1,bgDate1)
-		RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR, pos)
-		ToolTip,%bgCR1%
-		if(A_Index=1)
-			BG_DeleteBefore()
-		BG_Download()
-		BG_DownFail()
-		if(A_Index=1)
-			BG_Wallpapers()
-		bgCRList .= bgCR1 . "`n"
+		IfNotExist,%bgPath%
+		{
+			RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR, pos)
+			ToolTip,%bgCR1%
+			if(A_Index=1)
+				BG_DeleteBefore()
+			BG_Download()
+			BG_DownFail()
+			if(A_Index=1)
+				BG_Wallpapers()
+			bgCRList .= bgCR1 . "`n"
+		}
 	}
-	if(time=0){
-		MsgBox, 0, 可按Ctrl+C来复制内容, %bgCRList%
+	if(bgCRList){
+		BG_Content(bgCRList)
 	}else{
-		if(style=2 || style=3)
-			TrayTip,,%bgCRList%,3,1
-		if(style=0 || style=1)
-			ToolTip,%bgCRList%
-		if(style=1 || style=3)
-			Clipboard:=bgCRList
-		Sleep,%time%
+		BG_Random()
 	}
 }
 FileDelete,%A_Temp%\bingImg.xml
@@ -170,6 +149,19 @@ BG_Download(){
 ;~;【必应壁纸设置为桌面壁纸】
 BG_Wallpapers(){
 	DllCall("SystemParametersInfo", UInt, 0x14, UInt,0, Str,"" bgPath "", UInt, 2)
+}
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;~;【随机更换桌面壁纸】
+BG_Random(){
+	FileCopy, %bgDir%, %bgDir%
+	Random, roll, 1, %ErrorLevel%
+	Loop,%bgDir%\*.jpg
+	{
+		if(A_Index=roll){
+			bgPath:=A_LoopFileLongPath
+			BG_Wallpapers()
+		}
+	}
 }
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【获取屏幕的分辨率】
@@ -218,6 +210,21 @@ BG_DownFail(){
 		DPI:="1920x1080"
 		BG_GetImgUrlPath(bgUrl1,bgDate1)
 		BG_Download()
+	}
+}
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;~;【壁纸说明文字显示】
+BG_Content(content){
+	if(time=0){
+		MsgBox, 0, 可按Ctrl+C来复制内容, %content%
+	}else{
+		if(style=2 || style=3)
+			TrayTip,,%content%,3,1
+		if(style=0 || style=1)
+			ToolTip,%content%
+		if(style=1 || style=3)
+			Clipboard:=content
+		Sleep,%time%
 	}
 }
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
