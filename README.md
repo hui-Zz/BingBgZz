@@ -43,5 +43,6 @@ time=3000
 
 **你的支持是我最大的动力！：**
 
-![微信](https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz微信.png)
+<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz微信.png" alt="支持BingBgZz微信" style="max-width:30%;">
+
 ![支付宝](https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz支付宝.jpg)
