@@ -43,7 +43,4 @@ time=3000
 
 **你的支持是我最大的动力！：**
 
-<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz微信.png" alt="支持BingBgZz微信" width="300" height="336">
-
-<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz支付宝.jpg" alt="支持BingBgZz支付宝" width="300" height="300">
-
+<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz微信.png" alt="支持BingBgZz微信" width="300" height="336"><img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz支付宝.jpg" alt="支持BingBgZz支付宝" width="300" height="300">
