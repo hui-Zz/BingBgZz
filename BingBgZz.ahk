@@ -81,10 +81,10 @@ if(!batchFlag){
 	IfNotExist,%bgPath%
 	{
 		RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR)
+		BG_DeleteBefore()
 		BG_Download()
 		BG_DownFail()
 		BG_Wallpapers()
-		BG_DeleteBefore()
 		if(time=0){
 			MsgBox, 0, 可按Ctrl+C来复制内容, %bgCR1%
 		}else{
@@ -117,12 +117,12 @@ if(!batchFlag){
 		BG_GetImgUrlPath(bgUrl1,bgDate1)
 		RegExMatch(bgXML, "<copyright>(.*?)</copyright>", bgCR, pos)
 		ToolTip,%bgCR1%
+		if(A_Index=1)
+			BG_DeleteBefore()
 		BG_Download()
 		BG_DownFail()
-		if(A_Index=1){
+		if(A_Index=1)
 			BG_Wallpapers()
-			BG_DeleteBefore()
-		}
 		bgCRList .= bgCR1 . "`n"
 	}
 	if(time=0){
@@ -190,16 +190,15 @@ BG_GetDPI(){
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【壁纸数量超过设定删除最早一张】
 BG_DeleteBefore(){
-	if(bgFlag!=1 && bgMax>0){
+	if(bgMax>0){
 		FileCopy, %bgDir%, %bgDir%
 		if(bgMax<ErrorLevel){
 			tMax := 1
-			tPath := bgPath
 			Loop,%bgDir%\*.jpg
 			{
 				t1 := A_Now
 				t2 := A_LoopFileTimeCreated
-				t1 -= %t2%
+				t1 -= %t2%, Days
 				if(t1>tMax){
 					tMax := t1
 					tPath := A_LoopFileLongPath
