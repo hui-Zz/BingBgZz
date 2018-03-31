@@ -6,11 +6,12 @@
 ;║ 讨论QQ群：[246308937]、3222783、493194474
 ;╚═════════════════════════════════
 */
-#NoEnv					;~;不检查空变量为环境变量
-FileEncoding,UTF-8		;~;下载的XML以中文编码加载
-SetBatchLines,-1		;~;脚本全速执行(默认10ms)
-SetWorkingDir,%A_ScriptDir%	;~;脚本当前工作目录
-global BingBgZz:="BingBgZz"	;名称
+#NoEnv                          ;~;不检查空变量为环境变量
+FileEncoding,UTF-8              ;~;下载的XML以中文编码加载
+SetBatchLines,-1                ;~;脚本全速执行(默认10ms)
+SetTitleMatchMode,RegEx         ;~;窗口标题正则匹配
+SetWorkingDir,%A_ScriptDir%     ;~;脚本当前工作目录
+global BingBgZz:="BingBgZz"    ;~;名称
 global iniFile:=A_ScriptDir "\" BingBgZz ".ini"
 IfNotExist,%iniFile%
 {
@@ -28,6 +29,7 @@ global DPI:=0
 global bing:="http://cn.bing.com"
 global style:=0
 global time:=2000
+global xpWin7:=0
 IniRead, autoRun,%iniFile%, var_config, autoRun, 0
 IniRead, bgDay,%iniFile%, var_config, bgDay, 0
 IniRead, bgNum,%iniFile%, var_config, bgNum, 1
@@ -38,6 +40,7 @@ IniRead, DPI,%iniFile%, var_config, DPI, 0
 IniRead, bing,%iniFile%, var_config, bing, http://cn.bing.com
 IniRead, style,%iniFile%, var_config, style, 0
 IniRead, time,%iniFile%, var_config, time, 2000
+IniRead, xpWin7,%iniFile%, var_config, xpWin7, 0
 ;~;判断并修改随系统自动启动
 RegRead, autoRunFlag, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, BingBgZz
 autoRunFlag:=autoRunFlag ? 1 : 0
@@ -148,7 +151,27 @@ BG_Download(){
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【必应壁纸设置为桌面壁纸】
 BG_Wallpapers(){
-	DllCall("SystemParametersInfo", UInt, 0x14, UInt,0, Str,"" bgPath "", UInt, 2)
+	if(!xpWin7){
+		DllCall("SystemParametersInfo", UInt, 0x14, UInt,0, Str,"" bgPath "", UInt, 2)
+	}else if(xpWin7=2){
+		RegWrite,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,WallPaper,%bgPath%
+		Sleep,1000
+		sysBg:="rundll32.exe USER32.DLL,UpdatePerUserSystemParameters"
+		Run,%sysBg%
+	}else{
+		Process,Close,rundll32.exe
+		imageView:="rundll32.exe C:\Windows\System32\shimgvw.dll,ImageView_Fullscreen " . bgPath
+		Run,%imageView%
+		WinWaitActive, - Windows.*查看器$,,1
+		Sleep,20
+		SendInput, {AppsKey}
+		Sleep,200
+		SendInput,% A_OSVersion="WIN_XP" ? "b" : "k"
+		Sleep,100
+		WinHide, - Windows.*查看器$
+		Sleep,8000
+		Process,Close,rundll32.exe
+	}
 }
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【随机更换桌面壁纸】
@@ -230,6 +253,7 @@ BG_Content(content){
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;[初次运行]
 First_Run:
+xpWin7:=(A_OSVersion="WIN_XP" || A_OSVersion="WIN_7") ? 1 : 0
 FileAppend,
 (
 ;╔═════════════════════════════════
@@ -261,5 +285,7 @@ bing=http://cn.bing.com
 style=0
 ;~;当前必应壁纸说明显示停留时间(毫秒),0为弹窗显示手动关闭
 time=3000
+;~;【设置壁纸方式】Win10推荐：0；Win7推荐：0、1、2；XP推荐：1、2；(1为强制成功,2为命令行壁纸可能无变化)
+xpWin7=%xpWin7%
 ),%iniFile%
 return
