@@ -38,9 +38,12 @@ bing=http://cn.bing.com
 style=0
 ;~;当前必应壁纸说明显示停留时间(毫秒),0为弹窗显示手动关闭
 time=3000
+;~;【设置壁纸方式】Win10推荐：0；Win7推荐：0、1、2；XP推荐：1、2；(1为强制成功,2为命令行壁纸可能无变化)
+xpWin7=0
 ```
 
 
 **你的支持是我最大的动力！：**
 
-<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz微信.png" alt="支持BingBgZz微信" width="300" height="336"><img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz支付宝.jpg" alt="支持BingBgZz支付宝" width="300" height="300">
+<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz微信.png" alt="支持BingBgZz微信" width="300" height="336">
+<img src="https://raw.githubusercontent.com/hui-Zz/BingBgZz/master/支持BingBgZz支付宝.jpg" alt="支持BingBgZz支付宝" width="300" height="300">
