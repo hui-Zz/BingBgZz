@@ -1,6 +1,6 @@
 ﻿/*
 ;╔═════════════════════════════════
-;║【BingBgZz】每日桌面Bing壁纸 v2.0 @2018.03.29
+;║【BingBgZz】每日桌面Bing壁纸 v2.1 @2019.03.11
 ;║ 地址：https://github.com/hui-Zz/BingBgZz
 ;║ by hui-Zz 建议：hui0.0713@gmail.com
 ;║ 讨论QQ群：[246308937]、3222783、493194474
@@ -124,7 +124,7 @@ return
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;~;【获取壁纸下载地址和保存路径】
 BG_GetImgUrlPath(bgUrl1,bgDate1){
-	RegExMatch(bgUrl1, "[^/]+$", bgName)
+	bgName:=RegExReplace(bgUrl1, "i)\/th\?id=OHR\.(.*?ZH-CN.*?\.jpg).*?$", "$1")
 	if(bgFlag=1){
 		bgName:=RegExReplace(bgName, "i)[^_]+\.jpg$", DPI ".jpg")
 	}else if(bgFlag=2){
@@ -135,7 +135,7 @@ BG_GetImgUrlPath(bgUrl1,bgDate1){
 		bgName:=bgDate1 . ".jpg"
 	}
 	bgImgUrl:=bing . bgUrl1
-	bgImgUrl:=RegExReplace(bgImgUrl, "i)[^_]+\.jpg$", DPI ".jpg")
+	bgImgUrl:=RegExReplace(bgImgUrl, "i)_(\d+x\d+\.jpg)", "_" DPI ".jpg")
 	bgPath:=bgDir "\" bgName
 }
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
